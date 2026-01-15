@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Source from "@/models/Source";
+import Project from "@/models/Project";
 import { getCurrentUser } from "@/lib/auth";
 import mongoose from "mongoose";
 
@@ -29,6 +30,19 @@ export async function GET(
     }
 
     await dbConnect();
+
+    // Verify project ownership
+    const project = await Project.findOne({
+      _id: id,
+      owner_id: user.userId,
+    }).lean();
+
+    if (!project) {
+      return NextResponse.json(
+        { error: "Forbidden - you don't own this project" },
+        { status: 403 }
+      );
+    }
 
     const source = await Source.findOne({
       _id: sourceId,
@@ -84,6 +98,19 @@ export async function DELETE(
     }
 
     await dbConnect();
+
+    // Verify project ownership
+    const project = await Project.findOne({
+      _id: id,
+      owner_id: user.userId,
+    }).lean();
+
+    if (!project) {
+      return NextResponse.json(
+        { error: "Forbidden - you don't own this project" },
+        { status: 403 }
+      );
+    }
 
     const result = await Source.findOneAndDelete({
       _id: sourceId,
