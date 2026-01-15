@@ -32,6 +32,7 @@ import {
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { UserProfileDropdown } from "@/components/layout/UserProfileDropdown";
 
 interface Project {
   _id: string;
@@ -380,6 +381,7 @@ export default function ChatPage({
               >
                 <Settings className="w-4 h-4" />
               </Button>
+              <UserProfileDropdown />
             </div>
           </div>
         </div>

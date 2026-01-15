@@ -36,11 +36,11 @@ import {
   Trash2,
   MoreVertical,
   Loader2,
-  LogOut,
   Sparkles,
   Bot,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { UserProfileDropdown } from "@/components/layout/UserProfileDropdown";
 
 interface Project {
   _id: string;
@@ -124,16 +124,6 @@ export default function DashboardPage() {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await fetch("/api/auth/logout", { method: "POST" });
-      router.push("/login");
-      router.refresh();
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Animated background */}
@@ -154,14 +144,7 @@ export default function DashboardPage() {
                 AI Chatbot Platform
               </h1>
             </div>
-            <Button
-              variant="ghost"
-              className="text-gray-300 hover:text-white hover:bg-white/10"
-              onClick={handleLogout}
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </Button>
+            <UserProfileDropdown />
           </div>
         </div>
       </header>

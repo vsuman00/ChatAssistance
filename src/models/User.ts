@@ -6,6 +6,9 @@ export interface IUser extends Document {
   email: string;
   password_hash: string;
   name: string;
+  totalTokensUsed: number;
+  promptTokensUsed: number;
+  completionTokensUsed: number;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -29,6 +32,18 @@ const UserSchema = new Schema<IUser>(
       type: String,
       required: [true, "Name is required"],
       trim: true,
+    },
+    totalTokensUsed: {
+      type: Number,
+      default: 0,
+    },
+    promptTokensUsed: {
+      type: Number,
+      default: 0,
+    },
+    completionTokensUsed: {
+      type: Number,
+      default: 0,
     },
   },
   {

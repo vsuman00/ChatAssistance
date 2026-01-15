@@ -138,7 +138,7 @@ export async function POST(request: NextRequest) {
       system: systemSystem,
       messages: coreMessages,
       maxOutputTokens: 1024,
-      onFinish: async ({ text }) => {
+      onFinish: async ({ text, usage }) => {
         // Save assistant message
         const { default: Message } = await import("@/models/Message");
         await Message.create({
@@ -146,6 +146,26 @@ export async function POST(request: NextRequest) {
           role: "assistant",
           content: text,
         });
+
+        // Track token usage for paid models only (models without :free suffix)
+        const isPaidModel = !modelId.includes(":free");
+        if (isPaidModel && usage) {
+          // AI SDK v6 uses inputTokens and outputTokens
+          const promptTokens = usage.inputTokens || 0;
+          const completionTokens = usage.outputTokens || 0;
+          const totalTokens = promptTokens + completionTokens;
+
+          if (totalTokens > 0) {
+            const { default: User } = await import("@/models/User");
+            await User.findByIdAndUpdate(user.userId, {
+              $inc: {
+                totalTokensUsed: totalTokens,
+                promptTokensUsed: promptTokens,
+                completionTokensUsed: completionTokens,
+              },
+            });
+          }
+        }
       },
     });
 
