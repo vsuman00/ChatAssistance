@@ -1,5 +1,9 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { UserProfileDropdown } from "@/components/layout/UserProfileDropdown";
 import {
   Sparkles,
   MessageSquare,
@@ -9,9 +13,29 @@ import {
   Bot,
   Settings,
   Users,
+  LayoutDashboard,
 } from "lucide-react";
 
 export default function HomePage() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if user has a token cookie
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("/api/auth/check", {
+          credentials: "include",
+        });
+        if (response.ok) {
+          setIsLoggedIn(true);
+        }
+      } catch {
+        setIsLoggedIn(false);
+      }
+    };
+    checkAuth();
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Subtle animated background blobs */}
@@ -25,28 +49,45 @@ export default function HomePage() {
       <nav className="relative z-10 glass-strong">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+            >
               <div className="w-10 h-10 rounded-xl gradient-accent flex items-center justify-center shadow-lg shadow-primary/20">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold text-foreground">
-                AI Chatbot
+                ChatDalta
               </span>
-            </div>
+            </Link>
             <div className="flex items-center gap-4">
-              <Link href="/login">
-                <Button
-                  variant="ghost"
-                  className="text-muted-foreground hover:text-foreground hover:bg-muted"
-                >
-                  Sign In
-                </Button>
-              </Link>
-              <Link href="/register">
-                <Button className="gradient-accent text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all">
-                  Get Started
-                </Button>
-              </Link>
+              {isLoggedIn ? (
+                <>
+                  <Link href="/dashboard">
+                    <Button className="gradient-accent text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all">
+                      <LayoutDashboard className="w-4 h-4 mr-2" />
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <UserProfileDropdown />
+                </>
+              ) : (
+                <>
+                  <Link href="/login">
+                    <Button
+                      variant="ghost"
+                      className="text-muted-foreground hover:text-foreground hover:bg-muted"
+                    >
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link href="/register">
+                    <Button className="gradient-accent text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all">
+                      Get Started
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -76,24 +117,38 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/register">
-              <Button
-                size="lg"
-                className="w-full sm:w-auto gradient-accent text-white text-lg px-8 py-6 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
-              >
-                Start Building Free
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </Link>
-            <Link href="/login">
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full sm:w-auto border-border text-muted-foreground hover:text-foreground hover:bg-[#1A1A1A]/5 text-lg px-8 py-6"
-              >
-                Sign In
-              </Button>
-            </Link>
+            {isLoggedIn ? (
+              <Link href="/dashboard">
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto gradient-accent text-white text-lg px-8 py-6 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
+                >
+                  <LayoutDashboard className="mr-2 w-5 h-5" />
+                  Go to Dashboard
+                </Button>
+              </Link>
+            ) : (
+              <>
+                <Link href="/register">
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto gradient-accent text-white text-lg px-8 py-6 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
+                  >
+                    Start Building Free
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </Link>
+                <Link href="/login">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full sm:w-auto border-border text-muted-foreground hover:text-foreground hover:bg-[#1A1A1A]/5 text-lg px-8 py-6"
+                  >
+                    Sign In
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -177,13 +232,22 @@ export default function HomePage() {
               Join thousands of developers and businesses using our platform to
               create intelligent chatbots.
             </p>
-            <Link href="/register">
+            <Link href={isLoggedIn ? "/dashboard" : "/register"}>
               <Button
                 size="lg"
                 className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 shadow-lg"
               >
-                Get Started Now
-                <ArrowRight className="ml-2 w-5 h-5" />
+                {isLoggedIn ? (
+                  <>
+                    <LayoutDashboard className="mr-2 w-5 h-5" />
+                    Go to Dashboard
+                  </>
+                ) : (
+                  <>
+                    Get Started Now
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </>
+                )}
               </Button>
             </Link>
           </div>
@@ -199,17 +263,26 @@ export default function HomePage() {
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
               <span className="text-sm text-muted-foreground">
-                © 2026 AI Chatbot Platform. All rights reserved.
+                © 2026 ChatDalta. All rights reserved.
               </span>
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <Link href="#" className="hover:text-foreground transition-colors">
+              <Link
+                href="#"
+                className="hover:text-foreground transition-colors"
+              >
                 Privacy
               </Link>
-              <Link href="#" className="hover:text-foreground transition-colors">
+              <Link
+                href="#"
+                className="hover:text-foreground transition-colors"
+              >
                 Terms
               </Link>
-              <Link href="#" className="hover:text-foreground transition-colors">
+              <Link
+                href="#"
+                className="hover:text-foreground transition-colors"
+              >
                 Contact
               </Link>
             </div>

@@ -99,7 +99,7 @@ export default function RegisterPage() {
               Create an Account
             </CardTitle>
             <CardDescription className="text-muted-foreground">
-              Join the AI Chatbot Platform
+              Join ChatDalta
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit}>

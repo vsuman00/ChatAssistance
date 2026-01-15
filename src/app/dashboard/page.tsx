@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -136,14 +137,15 @@ export default function DashboardPage() {
       <header className="relative z-10 glass-strong sticky top-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+            >
               <div className="w-10 h-10 rounded-xl gradient-accent flex items-center justify-center shadow-lg shadow-primary/20">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <h1 className="text-xl font-bold text-foreground">
-                AI Chatbot Platform
-              </h1>
-            </div>
+              <h1 className="text-xl font-bold text-foreground">ChatDalta</h1>
+            </Link>
             <UserProfileDropdown />
           </div>
         </div>

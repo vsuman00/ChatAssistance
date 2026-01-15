@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "AI Chatbot Platform - Create Custom AI Agents",
+  title: "ChatDalta - Create Custom AI Agents",
   description:
     "Build and deploy custom AI chatbots with personalized system prompts. Create intelligent conversational agents powered by advanced language models.",
   keywords: ["AI", "chatbot", "GPT", "conversational AI", "custom agents"],

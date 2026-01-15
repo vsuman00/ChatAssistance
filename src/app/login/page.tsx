@@ -78,7 +78,7 @@ function LoginForm() {
             Welcome Back
           </CardTitle>
           <CardDescription className="text-muted-foreground">
-            Sign in to your AI Chatbot Platform
+            Sign in to ChatDalta
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>

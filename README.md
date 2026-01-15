@@ -1,6 +1,6 @@
-# AI Chatbot 🤖
+# ChatDalta 🤖
 
-A modern, full-stack AI chatbot application built with **Next.js 16**, **MongoDB**, and the **Vercel AI SDK**. Create and manage multiple AI projects, each with custom system prompts, model selection, and document-based context (RAG-lite).
+**ChatDalta** is a modern, full-stack AI chatbot application built with **Next.js 16**, **MongoDB**, and the **Vercel AI SDK**. Create and manage multiple AI projects, each with custom system prompts, model selection, and document-based context (RAG-lite).
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
@@ -47,7 +47,7 @@ A modern, full-stack AI chatbot application built with **Next.js 16**, **MongoDB
 
    ```bash
    git clone <repository-url>
-   cd ai-chatbot
+   cd chatdalta
    ```
 
 2. **Install dependencies**
@@ -62,7 +62,7 @@ A modern, full-stack AI chatbot application built with **Next.js 16**, **MongoDB
 
    ```env
    # MongoDB Connection String
-   MONGODB_URI=mongodb+srv://username:password@yourcluster.xxxxx.mongodb.net/ai-chatbot?retryWrites=true&w=majority
+   MONGODB_URI=mongodb+srv://username:password@yourcluster.xxxxx.mongodb.net/chatdalta?retryWrites=true&w=majority
 
    # JWT Secret (Generate a strong random string)
    JWT_SECRET=your-super-secret-jwt-key-here-change-this
@@ -93,7 +93,7 @@ A modern, full-stack AI chatbot application built with **Next.js 16**, **MongoDB
 ## 📂 Project Structure
 
 ```
-ai-chatbot/
+chatdalta/
 ├── src/
 │   ├── app/
 │   │   ├── api/              # API routes
