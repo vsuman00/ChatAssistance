@@ -8,6 +8,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   ArrowLeft,
   Send,
   Loader2,
@@ -19,6 +26,8 @@ import {
   Check,
   RotateCcw,
   Paperclip,
+  X,
+  Eye,
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -66,6 +75,61 @@ export default function ChatPage({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedSources, setUploadedSources] = useState<UploadedSource[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Preview dialog state
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewContent, setPreviewContent] = useState<{
+    fileName: string;
+    content: string;
+  } | null>(null);
+  const [isLoadingPreview, setIsLoadingPreview] = useState(false);
+  const [deletingSourceId, setDeletingSourceId] = useState<string | null>(null);
+
+  // Handle source file preview
+  const handlePreviewSource = async (sourceId: string) => {
+    setIsLoadingPreview(true);
+    setPreviewOpen(true);
+    try {
+      const response = await fetch(`/api/projects/${id}/sources/${sourceId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setPreviewContent({
+          fileName: data.source.fileName,
+          content: data.source.content,
+        });
+      } else {
+        toast.error("Failed to load file preview");
+        setPreviewOpen(false);
+      }
+    } catch (error) {
+      console.error("Error loading preview:", error);
+      toast.error("Failed to load file preview");
+      setPreviewOpen(false);
+    } finally {
+      setIsLoadingPreview(false);
+    }
+  };
+
+  // Handle source file delete
+  const handleDeleteSource = async (sourceId: string) => {
+    setDeletingSourceId(sourceId);
+    try {
+      const response = await fetch(`/api/projects/${id}/sources/${sourceId}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        setUploadedSources((prev) => prev.filter((s) => s._id !== sourceId));
+        toast.success("File deleted successfully");
+      } else {
+        toast.error("Failed to delete file");
+      }
+    } catch (error) {
+      console.error("Error deleting source:", error);
+      toast.error("Failed to delete file");
+    } finally {
+      setDeletingSourceId(null);
+    }
+  };
 
   // Fetch project details
   const fetchProject = useCallback(async () => {
@@ -437,10 +501,37 @@ export default function ChatPage({
               {uploadedSources.map((source) => (
                 <div
                   key={source._id}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-xs text-gray-300"
+                  className="group relative inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-xs text-gray-300 hover:bg-white/15 hover:border-purple-500/50 transition-all duration-200"
                 >
-                  <Paperclip className="w-3 h-3" />
-                  <span>{source.fileName}</span>
+                  <Paperclip className="w-3 h-3 shrink-0" />
+                  <span className="max-w-[120px] truncate">
+                    {source.fileName}
+                  </span>
+
+                  {/* Hover Actions */}
+                  <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ml-1">
+                    <button
+                      type="button"
+                      onClick={() => handlePreviewSource(source._id)}
+                      className="p-1 rounded hover:bg-white/20 text-gray-400 hover:text-blue-400 transition-colors"
+                      title="Preview file"
+                    >
+                      <Eye className="w-3 h-3" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteSource(source._id)}
+                      disabled={deletingSourceId === source._id}
+                      className="p-1 rounded hover:bg-white/20 text-gray-400 hover:text-red-400 transition-colors disabled:opacity-50"
+                      title="Delete file"
+                    >
+                      {deletingSourceId === source._id ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <X className="w-3 h-3" />
+                      )}
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -494,6 +585,42 @@ export default function ChatPage({
           </p>
         </div>
       </div>
+
+      {/* File Preview Dialog */}
+      <Dialog
+        open={previewOpen}
+        onOpenChange={(open) => {
+          setPreviewOpen(open);
+          if (!open) setPreviewContent(null);
+        }}
+      >
+        <DialogContent className="bg-slate-900 border-white/20 text-white max-w-2xl max-h-[80vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Paperclip className="w-4 h-4" />
+              {previewContent?.fileName || "File Preview"}
+            </DialogTitle>
+            <DialogDescription className="text-gray-400">
+              Preview of the uploaded file content
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex-1 overflow-auto rounded-lg bg-white/5 border border-white/10 p-4 mt-4">
+            {isLoadingPreview ? (
+              <div className="flex items-center justify-center py-10">
+                <Loader2 className="w-6 h-6 text-purple-500 animate-spin" />
+              </div>
+            ) : previewContent?.content ? (
+              <pre className="text-sm text-gray-300 whitespace-pre-wrap font-mono leading-relaxed">
+                {previewContent.content}
+              </pre>
+            ) : (
+              <p className="text-gray-400 text-center py-10">
+                No content available
+              </p>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

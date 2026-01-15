@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
-import { createOpenAI } from "@ai-sdk/openai";
-import { streamText, ModelMessage } from "ai";
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
+import { streamText } from "ai";
 import dbConnect from "@/lib/db";
 import Project from "@/models/Project";
 import { getCurrentUser } from "@/lib/auth";
@@ -8,9 +8,12 @@ import mongoose from "mongoose";
 
 export const maxDuration = 30;
 
-const openrouter = createOpenAI({
+const openrouter = createOpenAICompatible({
   baseURL: "https://openrouter.ai/api/v1",
-  apiKey: process.env.OPENROUTER_API_KEY,
+  name: "openrouter",
+  headers: {
+    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+  },
 });
 
 export async function POST(request: NextRequest) {
@@ -117,7 +120,7 @@ export async function POST(request: NextRequest) {
 
     // Convert messages to proper format, ensuring we only send role and content as strings
     // Strip any extra fields that might cause validation errors
-    const coreMessages: ModelMessage[] = messages
+    const coreMessages = messages
       .filter(
         (m: { role?: string; content?: unknown }) =>
           m.role &&
