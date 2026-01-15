@@ -147,8 +147,8 @@ export default function ProjectSettingsPage({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
       </div>
     );
   }
@@ -158,37 +158,39 @@ export default function ProjectSettingsPage({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Animated background */}
+    <div className="min-h-screen bg-background">
+      {/* Subtle animated background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
 
-      {/* Header */}
-      <header className="relative z-10 border-b border-white/10 backdrop-blur-xl bg-white/5">
+      {/* Header - Glassmorphism */}
+      <header className="relative z-10 glass-strong sticky top-0">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
-                className="text-gray-300 hover:text-white hover:bg-white/10"
+                className="text-muted-foreground hover:text-foreground hover:bg-[#1A1A1A]/5"
                 onClick={() => router.push("/dashboard")}
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back
               </Button>
-              <Separator orientation="vertical" className="h-6 bg-white/20" />
+              <Separator orientation="vertical" className="h-6 bg-[#E5E7EB]" />
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg gradient-accent flex items-center justify-center shadow-md shadow-primary/20">
                   <Sparkles className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-white font-medium">{project.name}</span>
+                <span className="text-foreground font-medium">
+                  {project.name}
+                </span>
               </div>
             </div>
             <Button
               onClick={() => router.push(`/chat/${id}`)}
-              className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600"
+              className="gradient-accent text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
             >
               <MessageSquare className="w-4 h-4 mr-2" />
               Open Chat
@@ -205,28 +207,28 @@ export default function ProjectSettingsPage({
           className="space-y-6"
         >
           <div>
-            <h1 className="text-2xl font-bold text-white mb-2">
+            <h1 className="text-2xl font-bold text-foreground mb-2">
               Project Settings
             </h1>
-            <p className="text-gray-400">Configure your AI chatbot agent</p>
+            <p className="text-muted-foreground">Configure your AI chatbot agent</p>
           </div>
 
-          <Card className="backdrop-blur-xl bg-white/5 border-white/10">
+          <Card className="glass">
             <CardHeader>
-              <CardTitle className="text-white">General Settings</CardTitle>
-              <CardDescription className="text-gray-400">
+              <CardTitle className="text-foreground">General Settings</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Update your project name and AI configuration
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-gray-200">
+                <Label htmlFor="name" className="text-foreground">
                   Project Name
                 </Label>
                 <Input
                   id="name"
                   placeholder="My Chatbot"
-                  className="bg-white/10 border-white/20 text-white"
+                  className="bg-white border-border text-foreground focus:border-primary focus:ring-primary"
                   value={formData.name}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
@@ -235,16 +237,16 @@ export default function ProjectSettingsPage({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="system_prompt" className="text-gray-200">
+                <Label htmlFor="system_prompt" className="text-foreground">
                   System Prompt
                 </Label>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-muted-foreground">
                   This prompt defines the AI&apos;s personality and behavior.
                 </p>
                 <Textarea
                   id="system_prompt"
                   placeholder="You are a helpful AI assistant..."
-                  className="bg-white/10 border-white/20 text-white min-h-[200px] font-mono text-sm"
+                  className="bg-white border-border text-foreground min-h-[200px] font-mono text-sm focus:border-primary focus:ring-primary"
                   value={formData.system_prompt}
                   onChange={(e) =>
                     setFormData({ ...formData, system_prompt: e.target.value })
@@ -253,15 +255,15 @@ export default function ProjectSettingsPage({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="model" className="text-gray-200">
+                <Label htmlFor="model" className="text-foreground">
                   AI Model
                 </Label>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-muted-foreground">
                   Select the AI model to power your assistant.
                 </p>
                 <select
                   id="model"
-                  className="w-full h-10 rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm text-white focus:outline-hidden focus:ring-2 focus:ring-purple-500 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full h-10 rounded-md border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
                   value={formData.model}
                   onChange={(e) =>
                     setFormData({ ...formData, model: e.target.value })
@@ -271,7 +273,7 @@ export default function ProjectSettingsPage({
                     <option
                       key={model.value}
                       value={model.value}
-                      className="bg-slate-900 text-white"
+                      className="bg-white text-foreground"
                     >
                       {model.label}
                     </option>
@@ -283,7 +285,7 @@ export default function ProjectSettingsPage({
                 <Button
                   onClick={handleSave}
                   disabled={isSaving || !formData.name.trim()}
-                  className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600"
+                  className="gradient-accent text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
                 >
                   {isSaving ? (
                     <>
@@ -301,25 +303,25 @@ export default function ProjectSettingsPage({
             </CardContent>
           </Card>
 
-          <Card className="backdrop-blur-xl bg-red-500/5 border-red-500/20">
+          <Card className="glass border-red-200 bg-red-50/50">
             <CardHeader>
-              <CardTitle className="text-red-400">Danger Zone</CardTitle>
-              <CardDescription className="text-gray-400">
+              <CardTitle className="text-red-600">Danger Zone</CardTitle>
+              <CardDescription className="text-red-500/70">
                 Irreversible actions for this project
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-white font-medium">Delete Project</p>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-foreground font-medium">Delete Project</p>
+                  <p className="text-sm text-muted-foreground">
                     This will permanently delete your project and all its data.
                   </p>
                 </div>
                 <Button
                   variant="destructive"
                   onClick={handleDelete}
-                  className="bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/50"
+                  className="bg-red-500 hover:bg-red-600 text-white"
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
                   Delete

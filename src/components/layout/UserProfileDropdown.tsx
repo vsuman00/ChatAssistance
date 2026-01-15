@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -18,7 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { User, LogOut, Coins, Loader2 } from "lucide-react";
+import { User, LogOut, Coins, Loader2, Moon, Sun } from "lucide-react";
 
 interface UserData {
   id: string;
@@ -31,9 +32,19 @@ interface UserData {
 
 export function UserProfileDropdown() {
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
   const [user, setUser] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const hasMounted = useRef(false);
+
+  useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      setMounted(true);
+    }
+  }, []);
 
   const fetchUser = useCallback(async () => {
     try {
@@ -84,8 +95,8 @@ export function UserProfileDropdown() {
 
   if (isLoading) {
     return (
-      <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center">
-        <Loader2 className="w-4 h-4 text-gray-400 animate-spin" />
+      <div className="w-9 h-9 rounded-full glass flex items-center justify-center">
+        <Loader2 className="w-4 h-4 text-muted-foreground animate-spin" />
       </div>
     );
   }
@@ -96,122 +107,144 @@ export function UserProfileDropdown() {
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+      <div className="flex items-center gap-2">
+        {/* Theme Toggle Button */}
+        {mounted && (
           <Button
             variant="ghost"
-            className="relative h-9 w-9 rounded-full p-0 hover:bg-white/10"
+            size="icon"
+            className="w-9 h-9 text-muted-foreground hover:text-foreground hover:bg-muted"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           >
-            <Avatar className="h-9 w-9 bg-gradient-to-br from-purple-500 to-blue-500">
-              <AvatarFallback className="bg-transparent text-white text-sm font-medium">
-                {getInitials(user.name)}
-              </AvatarFallback>
-            </Avatar>
+            {theme === "dark" ? (
+              <Sun className="w-4 h-4" />
+            ) : (
+              <Moon className="w-4 h-4" />
+            )}
+            <span className="sr-only">Toggle theme</span>
           </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          align="end"
-          className="w-56 bg-slate-900 border-white/20"
-        >
-          <div className="flex items-center gap-3 p-3">
-            <Avatar className="h-10 w-10 bg-gradient-to-br from-purple-500 to-blue-500">
-              <AvatarFallback className="bg-transparent text-white text-sm font-medium">
-                {getInitials(user.name)}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col">
-              <span className="text-sm font-medium text-white">
-                {user.name}
-              </span>
-              <span className="text-xs text-gray-400">{user.email}</span>
+        )}
+
+        {/* Profile Dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="relative h-9 w-9 rounded-full p-0 hover:bg-muted"
+            >
+              <Avatar className="h-9 w-9 gradient-accent shadow-md shadow-primary/20">
+                <AvatarFallback className="bg-transparent text-white text-sm font-medium">
+                  {getInitials(user.name)}
+                </AvatarFallback>
+              </Avatar>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            className="w-56 glass-strong border-border"
+          >
+            <div className="flex items-center gap-3 p-3">
+              <Avatar className="h-10 w-10 gradient-accent shadow-md shadow-primary/20">
+                <AvatarFallback className="bg-transparent text-white text-sm font-medium">
+                  {getInitials(user.name)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-foreground">
+                  {user.name}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {user.email}
+                </span>
+              </div>
             </div>
-          </div>
-          <DropdownMenuSeparator className="bg-white/10" />
-          <DropdownMenuItem
-            className="text-gray-300 focus:text-white focus:bg-white/10 cursor-pointer"
-            onClick={() => setIsProfileOpen(true)}
-          >
-            <User className="w-4 h-4 mr-2" />
-            Profile Details
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="text-gray-300 focus:text-white focus:bg-white/10 cursor-pointer"
-            onClick={() => setIsProfileOpen(true)}
-          >
-            <Coins className="w-4 h-4 mr-2" />
-            <span className="flex-1">Token Usage</span>
-            <span className="text-xs text-purple-400">
-              {formatTokens(user.totalTokensUsed)}
-            </span>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator className="bg-white/10" />
-          <DropdownMenuItem
-            className="text-red-400 focus:text-red-300 focus:bg-red-500/10 cursor-pointer"
-            onClick={handleLogout}
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            Logout
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            <DropdownMenuSeparator className="bg-border" />
+            <DropdownMenuItem
+              className="text-muted-foreground focus:text-foreground focus:bg-muted cursor-pointer"
+              onClick={() => setIsProfileOpen(true)}
+            >
+              <User className="w-4 h-4 mr-2" />
+              Profile Details
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-muted-foreground focus:text-foreground focus:bg-muted cursor-pointer"
+              onClick={() => setIsProfileOpen(true)}
+            >
+              <Coins className="w-4 h-4 mr-2" />
+              <span className="flex-1">Token Usage</span>
+              <span className="text-xs text-primary font-medium">
+                {formatTokens(user.totalTokensUsed)}
+              </span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-border" />
+            <DropdownMenuItem
+              className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer"
+              onClick={handleLogout}
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
       {/* Profile Details Dialog */}
       <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
-        <DialogContent className="bg-slate-900 border-white/20 text-white max-w-md">
+        <DialogContent className="glass-strong border-border text-foreground max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className="flex items-center gap-2 text-foreground">
               <User className="w-5 h-5" />
               Profile Details
             </DialogTitle>
-            <DialogDescription className="text-gray-400">
+            <DialogDescription className="text-muted-foreground">
               Your account information and usage statistics
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-6 pt-4">
             {/* User Info */}
             <div className="flex items-center gap-4">
-              <Avatar className="h-16 w-16 bg-gradient-to-br from-purple-500 to-blue-500">
+              <Avatar className="h-16 w-16 gradient-accent shadow-lg shadow-primary/20">
                 <AvatarFallback className="bg-transparent text-white text-xl font-medium">
                   {getInitials(user.name)}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h3 className="text-lg font-semibold text-white">
+                <h3 className="text-lg font-semibold text-foreground">
                   {user.name}
                 </h3>
-                <p className="text-sm text-gray-400">{user.email}</p>
+                <p className="text-sm text-muted-foreground">{user.email}</p>
               </div>
             </div>
 
             {/* Token Usage Section */}
-            <div className="rounded-lg bg-white/5 border border-white/10 p-4">
-              <h4 className="text-sm font-medium text-gray-300 mb-3 flex items-center gap-2">
-                <Coins className="w-4 h-4 text-purple-400" />
+            <div className="rounded-xl glass p-4">
+              <h4 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
+                <Coins className="w-4 h-4 text-primary" />
                 Token Usage (Paid Models)
               </h4>
               <div className="grid grid-cols-3 gap-4">
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-white">
+                  <p className="text-2xl font-bold text-foreground">
                     {formatTokens(user.totalTokensUsed)}
                   </p>
-                  <p className="text-xs text-gray-400">Total</p>
+                  <p className="text-xs text-muted-foreground">Total</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-blue-400">
+                  <p className="text-2xl font-bold text-blue-500">
                     {formatTokens(user.promptTokensUsed)}
                   </p>
-                  <p className="text-xs text-gray-400">Prompt</p>
+                  <p className="text-xs text-muted-foreground">Prompt</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-green-400">
+                  <p className="text-2xl font-bold text-emerald-500">
                     {formatTokens(user.completionTokensUsed)}
                   </p>
-                  <p className="text-xs text-gray-400">Completion</p>
+                  <p className="text-xs text-muted-foreground">Completion</p>
                 </div>
               </div>
             </div>
 
-            <p className="text-xs text-gray-500 text-center">
+            <p className="text-xs text-muted-foreground text-center">
               Token usage is only tracked for paid AI models
             </p>
           </div>

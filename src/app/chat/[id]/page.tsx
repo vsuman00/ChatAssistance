@@ -313,8 +313,8 @@ export default function ChatPage({
 
   if (isLoadingProject) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
       </div>
     );
   }
@@ -324,37 +324,37 @@ export default function ChatPage({
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-900 via-purple-900 to-slate-900 flex flex-col">
-      {/* Animated background */}
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Subtle animated background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
 
-      {/* Header */}
-      <header className="relative z-20 border-b border-white/10 backdrop-blur-xl bg-white/5">
+      {/* Header - Glassmorphism */}
+      <header className="relative z-20 glass-strong sticky top-0">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-gray-300 hover:text-white hover:bg-white/10"
+                className="text-muted-foreground hover:text-foreground hover:bg-[#1A1A1A]/5"
                 onClick={() => router.push("/dashboard")}
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back
               </Button>
-              <Separator orientation="vertical" className="h-6 bg-white/20" />
+              <Separator orientation="vertical" className="h-6 bg-[#E5E7EB]" />
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-linear-to-br from-purple-500 to-blue-500 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg gradient-accent flex items-center justify-center shadow-md shadow-primary/20">
                   <Sparkles className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <span className="text-white font-medium text-sm">
+                  <span className="text-foreground font-medium text-sm">
                     {project.name}
                   </span>
-                  <p className="text-gray-400 text-xs">
+                  <p className="text-muted-foreground text-xs">
                     {project.model_config?.model?.includes("/")
                       ? project.model_config.model
                       : "meta-llama/llama-3.3-70b-instruct:free"}
@@ -366,7 +366,7 @@ export default function ChatPage({
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-gray-300 hover:text-white hover:bg-white/10"
+                className="text-muted-foreground hover:text-foreground hover:bg-[#1A1A1A]/5"
                 onClick={resetChat}
                 disabled={messages.length === 0 && !isLoading}
               >
@@ -376,7 +376,7 @@ export default function ChatPage({
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-gray-300 hover:text-white hover:bg-white/10"
+                className="text-muted-foreground hover:text-foreground hover:bg-[#1A1A1A]/5"
                 onClick={() => router.push(`/dashboard/${id}/settings`)}
               >
                 <Settings className="w-4 h-4" />
@@ -396,13 +396,13 @@ export default function ChatPage({
               animate={{ opacity: 1, y: 0 }}
               className="text-center py-20"
             >
-              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-linear-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center">
-                <Bot className="w-10 h-10 text-purple-400" />
+              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl glass flex items-center justify-center">
+                <Bot className="w-10 h-10 text-primary" />
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">
+              <h2 className="text-2xl font-bold text-foreground mb-2">
                 Start a Conversation
               </h2>
-              <p className="text-gray-400 max-w-md mx-auto">
+              <p className="text-muted-foreground max-w-md mx-auto">
                 Send a message to begin chatting with your AI assistant. The
                 assistant will respond based on your configured system prompt.
               </p>
@@ -424,11 +424,18 @@ export default function ChatPage({
                     className={cn(
                       "w-8 h-8 shrink-0",
                       message.role === "user"
-                        ? "bg-linear-to-br from-blue-500 to-cyan-500"
-                        : "bg-linear-to-br from-purple-500 to-pink-500"
+                        ? "gradient-accent shadow-md shadow-primary/20"
+                        : "bg-muted border border-border"
                     )}
                   >
-                    <AvatarFallback className="bg-transparent text-white">
+                    <AvatarFallback
+                      className={cn(
+                        "bg-transparent",
+                        message.role === "user"
+                          ? "text-white"
+                          : "text-primary"
+                      )}
+                    >
                       {message.role === "user" ? (
                         <User className="w-4 h-4" />
                       ) : (
@@ -440,11 +447,16 @@ export default function ChatPage({
                     className={cn(
                       "group relative max-w-[80%] rounded-2xl px-4 py-3",
                       message.role === "user"
-                        ? "bg-linear-to-r from-blue-500 to-cyan-500 text-white"
-                        : "bg-white/10 backdrop-blur-sm text-gray-100"
+                        ? "gradient-accent text-white shadow-lg shadow-primary/20"
+                        : "glass text-foreground"
                     )}
                   >
-                    <div className="prose prose-invert prose-sm max-w-none wrap-break-word leading-relaxed">
+                    <div
+                      className={cn(
+                        "prose prose-sm max-w-none wrap-break-word leading-relaxed",
+                        message.role === "user" ? "prose-invert" : "prose-slate"
+                      )}
+                    >
                       {message.role === "user" ? (
                         <div className="whitespace-pre-wrap">
                           {message.content}
@@ -453,7 +465,7 @@ export default function ChatPage({
                         <ReactMarkdown>{message.content}</ReactMarkdown>
                       )}
                       {!message.content && message.role === "assistant" && (
-                        <span className="text-gray-400 italic">
+                        <span className="text-muted-foreground italic">
                           Thinking...
                         </span>
                       )}
@@ -463,7 +475,7 @@ export default function ChatPage({
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="text-gray-400 hover:text-white hover:bg-white/10 h-8 w-8"
+                          className="text-muted-foreground hover:text-foreground hover:bg-[#1A1A1A]/5 h-8 w-8"
                           onClick={() =>
                             copyToClipboard(message.content, message.id)
                           }
@@ -477,9 +489,8 @@ export default function ChatPage({
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="text-gray-400 hover:text-white hover:bg-white/10 h-8 w-8"
+                          className="text-muted-foreground hover:text-foreground hover:bg-[#1A1A1A]/5 h-8 w-8"
                           title="Regenerate"
-                          // Regenerate logic can be added later if needed, handled by resending context
                         >
                           <RotateCcw className="w-3 h-3" />
                         </Button>
@@ -494,8 +505,8 @@ export default function ChatPage({
         </div>
       </div>
 
-      {/* Input Area */}
-      <div className="relative z-20 border-t border-white/10 backdrop-blur-xl bg-white/5">
+      {/* Input Area - Glassmorphism */}
+      <div className="relative z-20 glass-strong">
         <div className="max-w-3xl mx-auto px-4 py-4">
           {/* Uploaded Files Display */}
           {uploadedSources.length > 0 && (
@@ -503,7 +514,7 @@ export default function ChatPage({
               {uploadedSources.map((source) => (
                 <div
                   key={source._id}
-                  className="group relative inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-xs text-gray-300 hover:bg-white/15 hover:border-purple-500/50 transition-all duration-200"
+                  className="group relative inline-flex items-center gap-2 px-3 py-1.5 glass border-border rounded-lg text-xs text-muted-foreground hover:bg-white/80 hover:border-primary/50 transition-all duration-200"
                 >
                   <Paperclip className="w-3 h-3 shrink-0" />
                   <span className="max-w-[120px] truncate">
@@ -515,7 +526,7 @@ export default function ChatPage({
                     <button
                       type="button"
                       onClick={() => handlePreviewSource(source._id)}
-                      className="p-1 rounded hover:bg-white/20 text-gray-400 hover:text-blue-400 transition-colors"
+                      className="p-1 rounded hover:bg-[#1A1A1A]/5 text-muted-foreground hover:text-blue-500 transition-colors"
                       title="Preview file"
                     >
                       <Eye className="w-3 h-3" />
@@ -524,7 +535,7 @@ export default function ChatPage({
                       type="button"
                       onClick={() => handleDeleteSource(source._id)}
                       disabled={deletingSourceId === source._id}
-                      className="p-1 rounded hover:bg-white/20 text-gray-400 hover:text-red-400 transition-colors disabled:opacity-50"
+                      className="p-1 rounded hover:bg-[#1A1A1A]/5 text-muted-foreground hover:text-red-500 transition-colors disabled:opacity-50"
                       title="Delete file"
                     >
                       {deletingSourceId === source._id ? (
@@ -551,7 +562,7 @@ export default function ChatPage({
               variant="outline"
               disabled={isLoading || isUploading}
               onClick={() => fileInputRef.current?.click()}
-              className="h-[52px] w-[52px] shrink-0 border-white/20 bg-white/10 text-gray-400 hover:text-white hover:bg-white/20"
+              className="h-[52px] w-[52px] shrink-0 border-border bg-white text-muted-foreground hover:text-foreground hover:bg-muted"
             >
               {isUploading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -562,7 +573,7 @@ export default function ChatPage({
             <div className="flex-1 relative">
               <Textarea
                 placeholder="Type your message..."
-                className="min-h-[52px] max-h-[200px] resize-none bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-500 pr-12"
+                className="min-h-[52px] max-h-[200px] resize-none bg-white border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary pr-12"
                 value={input}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
@@ -573,7 +584,7 @@ export default function ChatPage({
             <Button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="h-[52px] w-[52px] shrink-0 bg-linear-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600"
+              className="h-[52px] w-[52px] shrink-0 gradient-accent shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
             >
               {isLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -582,7 +593,7 @@ export default function ChatPage({
               )}
             </Button>
           </form>
-          <p className="text-xs text-gray-500 text-center mt-2">
+          <p className="text-xs text-muted-foreground text-center mt-2">
             Press Enter to send, Shift+Enter for new line
           </p>
         </div>
@@ -596,27 +607,27 @@ export default function ChatPage({
           if (!open) setPreviewContent(null);
         }}
       >
-        <DialogContent className="bg-slate-900 border-white/20 text-white max-w-2xl max-h-[80vh] flex flex-col">
+        <DialogContent className="glass-strong border-border text-foreground max-w-2xl max-h-[80vh] flex flex-col">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className="flex items-center gap-2 text-foreground">
               <Paperclip className="w-4 h-4" />
               {previewContent?.fileName || "File Preview"}
             </DialogTitle>
-            <DialogDescription className="text-gray-400">
+            <DialogDescription className="text-muted-foreground">
               Preview of the uploaded file content
             </DialogDescription>
           </DialogHeader>
-          <div className="flex-1 overflow-auto rounded-lg bg-white/5 border border-white/10 p-4 mt-4">
+          <div className="flex-1 overflow-auto rounded-lg bg-muted border border-border p-4 mt-4">
             {isLoadingPreview ? (
               <div className="flex items-center justify-center py-10">
-                <Loader2 className="w-6 h-6 text-purple-500 animate-spin" />
+                <Loader2 className="w-6 h-6 text-primary animate-spin" />
               </div>
             ) : previewContent?.content ? (
-              <pre className="text-sm text-gray-300 whitespace-pre-wrap font-mono leading-relaxed">
+              <pre className="text-sm text-foreground whitespace-pre-wrap font-mono leading-relaxed">
                 {previewContent.content}
               </pre>
             ) : (
-              <p className="text-gray-400 text-center py-10">
+              <p className="text-muted-foreground text-center py-10">
                 No content available
               </p>
             )}

@@ -13,35 +13,37 @@ import {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Animated background */}
+    <div className="min-h-screen bg-background">
+      {/* Subtle animated background blobs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute top-1/2 -left-40 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-500" />
-        <div className="absolute -bottom-40 right-1/3 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute top-1/2 -left-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-500" />
+        <div className="absolute -bottom-40 right-1/3 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
 
-      {/* Navigation */}
-      <nav className="relative z-10 border-b border-white/10 backdrop-blur-xl bg-white/5">
+      {/* Navigation - Glassmorphism */}
+      <nav className="relative z-10 glass-strong">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl gradient-accent flex items-center justify-center shadow-lg shadow-primary/20">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">AI Chatbot</span>
+              <span className="text-xl font-bold text-foreground">
+                AI Chatbot
+              </span>
             </div>
             <div className="flex items-center gap-4">
               <Link href="/login">
                 <Button
                   variant="ghost"
-                  className="text-gray-300 hover:text-white hover:bg-white/10"
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted"
                 >
                   Sign In
                 </Button>
               </Link>
               <Link href="/register">
-                <Button className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white">
+                <Button className="gradient-accent text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all">
                   Get Started
                 </Button>
               </Link>
@@ -53,23 +55,21 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
         <div className="text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-8">
-            <Zap className="w-4 h-4 text-yellow-400" />
-            <span className="text-sm text-gray-300">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-[0.5px] border-border mb-8">
+            <Zap className="w-4 h-4 text-primary" />
+            <span className="text-sm text-muted-foreground">
               Powered by GPT-4o and Advanced AI
             </span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 leading-tight">
             Build Custom{" "}
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-              AI Chatbots
-            </span>
+            <span className="text-gradient-accent">AI Chatbots</span>
             <br />
             in Minutes
           </h1>
 
-          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-10">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
             Create intelligent conversational agents with personalized
             personalities. Define custom system prompts and deploy your own AI
             assistants instantly.
@@ -79,7 +79,7 @@ export default function HomePage() {
             <Link href="/register">
               <Button
                 size="lg"
-                className="w-full sm:w-auto bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white text-lg px-8 py-6"
+                className="w-full sm:w-auto gradient-accent text-white text-lg px-8 py-6 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
               >
                 Start Building Free
                 <ArrowRight className="ml-2 w-5 h-5" />
@@ -89,7 +89,7 @@ export default function HomePage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="w-full sm:w-auto border-white/20 text-gray-300 hover:text-white hover:bg-white/10 text-lg px-8 py-6"
+                className="w-full sm:w-auto border-border text-muted-foreground hover:text-foreground hover:bg-[#1A1A1A]/5 text-lg px-8 py-6"
               >
                 Sign In
               </Button>
@@ -101,16 +101,16 @@ export default function HomePage() {
       {/* Features Section */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Everything You Need
           </h2>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             A complete platform for building, managing, and deploying AI
             chatbots
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
             {
               icon: Bot,
@@ -151,15 +151,15 @@ export default function HomePage() {
           ].map((feature, index) => (
             <div
               key={index}
-              className="group p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 transition-all duration-300"
+              className="group p-6 rounded-2xl glass hover:glass-strong hover:shadow-lg hover:shadow-primary/10 transition-all duration-300"
             >
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <feature.icon className="w-6 h-6 text-purple-400" />
+              <div className="w-12 h-12 rounded-xl gradient-accent flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-md shadow-primary/20">
+                <feature.icon className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">
+              <h3 className="text-xl font-semibold text-foreground mb-2">
                 {feature.title}
               </h3>
-              <p className="text-gray-400">{feature.description}</p>
+              <p className="text-muted-foreground">{feature.description}</p>
             </div>
           ))}
         </div>
@@ -167,8 +167,8 @@ export default function HomePage() {
 
       {/* CTA Section */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-600 to-blue-600 p-8 md:p-16">
-          <div className="absolute inset-0 bg-grid-white/10" />
+        <div className="relative overflow-hidden rounded-3xl gradient-accent p-8 md:p-16 shadow-2xl shadow-primary/30">
+          <div className='absolute inset-0 bg-[url(&apos;data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E&apos;)]' />
           <div className="relative z-10 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Ready to Build Your AI Assistant?
@@ -180,7 +180,7 @@ export default function HomePage() {
             <Link href="/register">
               <Button
                 size="lg"
-                className="bg-white text-purple-600 hover:bg-gray-100 text-lg px-8 py-6"
+                className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 shadow-lg"
               >
                 Get Started Now
                 <ArrowRight className="ml-2 w-5 h-5" />
@@ -191,25 +191,25 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-white/10">
+      <footer className="relative z-10 border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg gradient-accent flex items-center justify-center">
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
-              <span className="text-sm text-gray-400">
+              <span className="text-sm text-muted-foreground">
                 © 2026 AI Chatbot Platform. All rights reserved.
               </span>
             </div>
-            <div className="flex items-center gap-6 text-sm text-gray-400">
-              <Link href="#" className="hover:text-white transition-colors">
+            <div className="flex items-center gap-6 text-sm text-muted-foreground">
+              <Link href="#" className="hover:text-foreground transition-colors">
                 Privacy
               </Link>
-              <Link href="#" className="hover:text-white transition-colors">
+              <Link href="#" className="hover:text-foreground transition-colors">
                 Terms
               </Link>
-              <Link href="#" className="hover:text-white transition-colors">
+              <Link href="#" className="hover:text-foreground transition-colors">
                 Contact
               </Link>
             </div>
